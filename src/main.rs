@@ -51,4 +51,7 @@ fn main() {
     drawer.print_pixel((255, 0, 0), (0, 255, 0));
 
     println!();
+
+    let (cols, rows) = crossterm::terminal::size().unwrap();
+    println!("cols={cols} rows={rows}");
 }
