@@ -12,6 +12,7 @@ pub struct TermDraw {
     stdout: std::io::Stdout,
     width: u32,
     height: u32,
+    buf: Vec<Vec<Col>>,
 }
 
 impl TermDraw {
@@ -20,6 +21,7 @@ impl TermDraw {
             stdout: std::io::stdout(),
             width: 0,
             height: 0,
+            buf: vec![vec![]],
         }
     }
 
@@ -34,13 +36,20 @@ impl TermDraw {
         self.width = cols.into();
         let rows: u32 = rows.into();
         self.height = rows * 2;
+
+        self.buf.clear();
+
+        for _y in 0..self.height {
+            self.buf
+                .push(vec![(0, 0, 0); self.width.try_into().unwrap()]);
+        }
     }
 
-    pub fn print_pixel(&mut self, color_top: Col, color_bot: Col) {
+    fn print_pixel(stdout: &mut std::io::Stdout, color_top: Col, color_bot: Col) {
         let (tr, tg, tb) = color_top;
         let (br, bg, bb) = color_bot;
 
-        self.stdout
+        stdout
             .execute(SetForegroundColor(Color::Rgb {
                 r: tr,
                 g: tg,
@@ -48,7 +57,7 @@ impl TermDraw {
             }))
             .unwrap();
 
-        self.stdout
+        stdout
             .execute(SetBackgroundColor(Color::Rgb {
                 r: br,
                 g: bg,
@@ -56,16 +65,28 @@ impl TermDraw {
             }))
             .unwrap();
 
-        self.stdout.execute(Print(PIXEL)).unwrap();
+        stdout.execute(Print(PIXEL)).unwrap();
 
-        self.stdout.execute(ResetColor).unwrap();
+        stdout.execute(ResetColor).unwrap();
+    }
+
+    pub fn draw(&mut self) {
+        for pair in self.buf.chunks(2) {
+            let [line0, line1] = pair else {
+                unreachable!();
+            };
+
+            for long_pixel in line0.into_iter().zip(line1) {
+                let (pix0, pix1) = long_pixel;
+                let pix0 = *pix0;
+                let pix1 = *pix1;
+                TermDraw::print_pixel(&mut self.stdout, pix0, pix1);
+            }
+        }
     }
 }
 
 fn main() {
     let mut drawer = TermDraw::new();
-
-    drawer.print_pixel((255, 0, 0), (0, 255, 0));
-
-    println!();
+    drawer.draw();
 }
