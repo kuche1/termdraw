@@ -6,20 +6,20 @@ use crossterm::{
 
 const PIXEL: &str = "▀";
 
-type Col = (u8, u8, u8);
+pub type Col = (u8, u8, u8);
 
-struct TermDraw {
+pub struct TermDraw {
     stdout: std::io::Stdout,
 }
 
 impl TermDraw {
-    fn new() -> Self {
+    pub fn new() -> Self {
         TermDraw {
             stdout: std::io::stdout(),
         }
     }
 
-    fn print_pixel(&mut self, color_top: Col, color_bot: Col) {
+    pub fn print_pixel(&mut self, color_top: Col, color_bot: Col) {
         let (tr, tg, tb) = color_top;
         let (br, bg, bb) = color_bot;
 
