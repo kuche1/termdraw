@@ -7,6 +7,7 @@ use crossterm::{
 const PIXEL: &str = "▀";
 
 pub type Col = (u8, u8, u8);
+type Density = u8;
 
 pub struct TermDraw {
     stdout: std::io::Stdout,
@@ -100,7 +101,7 @@ impl TermDraw {
     }
 
     fn line1(&mut self) {
-        for pos in 11..=20 {
+        for pos in 10..=20 {
             self.buf[pos][pos] = (0, 255, 0);
         }
     }
@@ -108,9 +109,15 @@ impl TermDraw {
 
 fn main() {
     let mut canv = TermDraw::new();
+
     canv.line0();
     canv.draw();
     canv.clear();
+    canv.line1();
+    canv.draw();
+    canv.clear();
+
+    canv.line0();
     canv.line1();
     canv.draw();
 }
