@@ -152,15 +152,35 @@ impl TermDraw {
         let x_max: f32 = (self.buf[0].len() - 1) as f32;
         let y_max: f32 = (self.buf.len() - 1) as f32;
 
-        let x_start: usize = (x_start * x_max) as usize;
-        let y_start: usize = (y_start * y_max) as usize;
+        let x_start = x_start * x_max;
+        let y_start = y_start * y_max;
 
-        let x_end: usize = (x_end * x_max) as usize;
-        let y_end: usize = (y_end * y_max) as usize;
+        let x_end = x_end * x_max;
+        let y_end = y_end * y_max;
 
-        for x in x_start..=x_end {
-            self.pixel_set(x, 5, col);
+        let x_len = x_end - x_start; // TODO1 assuming x_end is greater
+        let y_len = y_end - y_start; // TODO1 assuming x_end is greater
+
+        dbg!(x_len);
+        dbg!(y_len);
+        assert!(y_len < x_len);
+
+        let x_step = x_len / y_len;
+        dbg!(x_step);
+
+        // TODO this vvv sucks because we miss some spots on the X axis
+
+        let mut x: f32 = x_start;
+
+        for y in (y_start as usize)..=(y_end as usize) {
+            println!("x={x} y={y}");
+            self.pixel_set(x as usize, y, col);
+            x += x_step;
         }
+
+        // for x in (x_start..=x_end).step_by(x_step) {
+        //     self.pixel_set(x, 5, col);
+        // }
     }
 }
 
