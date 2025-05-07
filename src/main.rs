@@ -96,6 +96,10 @@ impl TermDraw {
     }
 
     fn pixel_set(&mut self, x: usize, y: usize, col: Col) {
+        // there are 2 way to do this
+        // 1 - calculate color on each pixel set
+        // 2 - accumilate r,g,b and calculate color on draw
+
         let (cr, cg, cb) = col;
         let cr: u16 = cr.into();
         let cg: u16 = cg.into();
