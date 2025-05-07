@@ -8,12 +8,13 @@ const PIXEL: &str = "▀";
 
 pub type Col = (u8, u8, u8);
 type Density = u8;
+type Pixel = (Col, Density);
 
 pub struct TermDraw {
     stdout: std::io::Stdout,
     width: u32,
     height: u32,
-    buf: Vec<Vec<Col>>,
+    buf: Vec<Vec<Pixel>>,
 }
 
 impl TermDraw {
@@ -42,7 +43,7 @@ impl TermDraw {
 
         for _y in 0..self.height {
             self.buf
-                .push(vec![(0, 0, 0); self.width.try_into().unwrap()]);
+                .push(vec![((0, 0, 0), 0); self.width.try_into().unwrap()]);
         }
     }
 
@@ -74,7 +75,7 @@ impl TermDraw {
     pub fn clear(&mut self) {
         for line in self.buf.iter_mut() {
             for pixel in line {
-                *pixel = (0, 0, 0);
+                *pixel = ((0, 0, 0), 0);
             }
         }
     }
@@ -87,22 +88,26 @@ impl TermDraw {
 
             for long_pixel in line0.into_iter().zip(line1) {
                 let (pix0, pix1) = long_pixel;
-                let pix0 = *pix0;
-                let pix1 = *pix1;
+                let (pix0, _) = *pix0;
+                let (pix1, _) = *pix1;
                 TermDraw::print_pixel(&mut self.stdout, pix0, pix1);
             }
         }
     }
 
+    fn pixel_set(&mut self, x: usize, y: usize, col: Col) {
+        self.buf[y][x] = (col, 0);
+    }
+
     fn line0(&mut self) {
         for pos in 0..=10 {
-            self.buf[pos][pos] = (255, 0, 0);
+            self.pixel_set(pos, pos, (255, 0, 0));
         }
     }
 
     fn line1(&mut self) {
         for pos in 10..=20 {
-            self.buf[pos][pos] = (0, 255, 0);
+            self.pixel_set(pos, pos, (0, 255, 0));
         }
     }
 }
