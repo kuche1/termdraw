@@ -128,6 +128,19 @@ impl TermDraw {
         self.buf[y][x] = ((nr, ng, nb), new_dens);
     }
 
+    fn line_basic_x(&mut self, x_start: usize, x_end: usize, y: usize, col: Col) {
+        for x in x_start..=x_end {
+            println!("x={x} y={y}");
+            self.pixel_set(x, y, col);
+        }
+    }
+
+    fn line_basic_y(&mut self, x: usize, y_start: usize, y_end: usize, col: Col) {
+        for y in y_start..=y_end {
+            self.pixel_set(x, y, col);
+        }
+    }
+
     pub fn line(&mut self, col: Col) {
         let x_start: f32 = 0.0;
         let x_end: f32 = 0.8;
@@ -159,16 +172,11 @@ impl TermDraw {
         let mut x: f32 = x_start;
 
         for y in (y_start as usize)..=(y_end as usize) {
-            let x_target = (x + x_step) as usize;
-            let mut x_tmp = x as usize;
-
-            while x_tmp < x_target {
-                // TODO3 I really have to think if this is going to cause empty pixels (I can't think RN cuz it's too late)
-                self.pixel_set(x_tmp, y, col);
-                println!("x={x_tmp} y={y}");
-                x_tmp += 1;
-            }
-            x += x_step;
+            // TODO3 I really have to think about this (I can't think RN cuz it's too late)
+            // TODO3 this might actually be a blessing in disguide, fix the basic drawer to accept any arguments and think if we can ommit the the len check
+            let end = x + x_step;
+            self.line_basic_x(x as usize, end as usize - 1, y, col);
+            x = end;
         }
     }
 }
