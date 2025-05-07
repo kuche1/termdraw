@@ -36,10 +36,6 @@ impl TermDraw {
         self.height = rows * 2;
     }
 
-    fn dbg(&self) {
-        println!("width={} height={}", self.width, self.height);
-    }
-
     pub fn print_pixel(&mut self, color_top: Col, color_bot: Col) {
         let (tr, tg, tb) = color_top;
         let (br, bg, bb) = color_bot;
@@ -72,6 +68,4 @@ fn main() {
     drawer.print_pixel((255, 0, 0), (0, 255, 0));
 
     println!();
-
-    drawer.dbg();
 }
