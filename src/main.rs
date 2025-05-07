@@ -83,6 +83,8 @@ impl TermDraw {
     }
 
     pub fn draw(&mut self) {
+        // TODO8 I think there is a 2nd buffer in the terminal that we can use, instead of printing char by char
+
         for pair in self.buf.chunks(2) {
             let [line0, line1] = pair else {
                 unreachable!();
