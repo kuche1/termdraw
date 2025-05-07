@@ -3,40 +3,51 @@ use crossterm::{
     ExecutableCommand,
     style::{Color, Print, ResetColor, SetBackgroundColor, SetForegroundColor},
 };
-use std::io::stdout;
 
 const PIXEL: &str = "▀";
 
 type Col = (u8, u8, u8);
 
-fn print_pixel(color_top: Col, color_bot: Col) {
-    let (tr, tg, tb) = color_top;
-    let (br, bg, bb) = color_bot;
+struct TermDraw {
+    stdout: std::io::Stdout,
+}
 
-    let mut stdout = stdout();
+impl TermDraw {
+    fn new() -> Self {
+        TermDraw {
+            stdout: std::io::stdout(),
+        }
+    }
 
-    stdout
-        .execute(SetForegroundColor(Color::Rgb {
-            r: tr,
-            g: tg,
-            b: tb,
-        }))
-        .unwrap();
+    fn print_pixel(&mut self, color_top: Col, color_bot: Col) {
+        let (tr, tg, tb) = color_top;
+        let (br, bg, bb) = color_bot;
 
-    stdout
-        .execute(SetBackgroundColor(Color::Rgb {
-            r: br,
-            g: bg,
-            b: bb,
-        }))
-        .unwrap();
+        self.stdout
+            .execute(SetForegroundColor(Color::Rgb {
+                r: tr,
+                g: tg,
+                b: tb,
+            }))
+            .unwrap();
 
-    stdout.execute(Print(PIXEL)).unwrap();
+        self.stdout
+            .execute(SetBackgroundColor(Color::Rgb {
+                r: br,
+                g: bg,
+                b: bb,
+            }))
+            .unwrap();
 
-    stdout.execute(ResetColor).unwrap();
+        self.stdout.execute(Print(PIXEL)).unwrap();
+
+        self.stdout.execute(ResetColor).unwrap();
+    }
 }
 
 fn main() {
-    print_pixel((255, 0, 0), (0, 255, 0));
+    let mut drawer = TermDraw::new();
+
+    drawer.print_pixel((255, 0, 0), (0, 255, 0));
     println!();
 }
