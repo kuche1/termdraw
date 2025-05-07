@@ -49,5 +49,6 @@ fn main() {
     let mut drawer = TermDraw::new();
 
     drawer.print_pixel((255, 0, 0), (0, 255, 0));
+
     println!();
 }
