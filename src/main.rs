@@ -97,7 +97,7 @@ impl TermDraw {
 
     fn pixel_set(&mut self, x: usize, y: usize, col: Col) {
         // there are 2 way to do this
-        // 1 - calculate color on each pixel set
+        // 1 - calculate color on each pixel set (current)
         // 2 - accumilate r,g,b and calculate color on draw
 
         let (cr, cg, cb) = col;
