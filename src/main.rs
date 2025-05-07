@@ -70,6 +70,14 @@ impl TermDraw {
         stdout.execute(ResetColor).unwrap();
     }
 
+    pub fn clear(&mut self) {
+        for line in self.buf.iter_mut() {
+            for pixel in line {
+                *pixel = (0, 0, 0);
+            }
+        }
+    }
+
     pub fn draw(&mut self) {
         for pair in self.buf.chunks(2) {
             let [line0, line1] = pair else {
@@ -84,9 +92,25 @@ impl TermDraw {
             }
         }
     }
+
+    fn line0(&mut self) {
+        for pos in 0..=10 {
+            self.buf[pos][pos] = (255, 0, 0);
+        }
+    }
+
+    fn line1(&mut self) {
+        for pos in 11..=20 {
+            self.buf[pos][pos] = (0, 255, 0);
+        }
+    }
 }
 
 fn main() {
-    let mut drawer = TermDraw::new();
-    drawer.draw();
+    let mut canv = TermDraw::new();
+    canv.line0();
+    canv.draw();
+    canv.clear();
+    canv.line1();
+    canv.draw();
 }
