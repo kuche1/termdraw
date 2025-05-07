@@ -179,5 +179,6 @@ fn main() {
 
     canv.line2((0, 0, 255));
     canv.line2((255, 0, 0));
+    canv.line2((0, 255, 0));
     canv.draw();
 }
