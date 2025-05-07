@@ -96,7 +96,30 @@ impl TermDraw {
     }
 
     fn pixel_set(&mut self, x: usize, y: usize, col: Col) {
-        self.buf[y][x] = (col, 0);
+        let (cr, cg, cb) = col;
+        let cr: u16 = cr.into();
+        let cg: u16 = cg.into();
+        let cb: u16 = cb.into();
+
+        let (old_col, old_dens) = self.buf[y][x];
+        let (or, og, ob) = old_col;
+        let or: u16 = or.into();
+        let og: u16 = og.into();
+        let ob: u16 = ob.into();
+
+        let old_dens: u16 = old_dens.into();
+        let new_dens = old_dens + 1;
+
+        let nr = (or * old_dens + cr) / new_dens;
+        let ng = (og * old_dens + cg) / new_dens;
+        let nb = (ob * old_dens + cb) / new_dens;
+
+        let nr: u8 = nr.try_into().unwrap();
+        let ng: u8 = ng.try_into().unwrap();
+        let nb: u8 = nb.try_into().unwrap();
+        let new_dens: u8 = new_dens.try_into().unwrap();
+
+        self.buf[y][x] = ((nr, ng, nb), new_dens);
     }
 
     fn line0(&mut self) {
