@@ -143,20 +143,22 @@ impl TermDraw {
     }
 
     fn line2(&mut self, col: Col) {
-        let h: f32 = 1.0;
-        let w: f32 = 0.8;
+        let x_start: f32 = 0.0;
+        let x_end: f32 = 0.8;
 
-        let y_start: usize = 0;
-        let y_end: f32 = ((self.buf.len() - 1) as f32) * h;
-        let y_end: usize = y_end as usize;
-        let y_len = y_end - y_start; // TODO0 and what if bad pos?
+        let y_start: f32 = 0.0;
+        let y_end: f32 = 1.0;
 
-        let x_start: usize = 0;
-        let x_end: f32 = ((self.buf[0].len() - 1) as f32) * w;
-        let x_end: usize = x_end as usize;
-        let x_len = x_end - x_start; // TODO0 and what if bad pos?
+        let x_max: f32 = (self.buf[0].len() - 1) as f32;
+        let y_max: f32 = (self.buf.len() - 1) as f32;
 
-        for x in 0..=x_end {
+        let x_start: usize = (x_start * x_max) as usize;
+        let y_start: usize = (y_start * y_max) as usize;
+
+        let x_end: usize = (x_end * x_max) as usize;
+        let y_end: usize = (y_end * y_max) as usize;
+
+        for x in x_start..=x_end {
             self.pixel_set(x, 5, col);
         }
     }
