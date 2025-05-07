@@ -128,21 +128,7 @@ impl TermDraw {
         self.buf[y][x] = ((nr, ng, nb), new_dens);
     }
 
-    fn line0(&mut self) {
-        // TODO1 delete
-        for pos in 0..=10 {
-            self.pixel_set(pos, pos, (255, 0, 0));
-        }
-    }
-
-    fn line1(&mut self) {
-        // TODO1 delete
-        for pos in 10..=20 {
-            self.pixel_set(pos, pos, (0, 255, 0));
-        }
-    }
-
-    fn line2(&mut self, col: Col) {
+    pub fn line(&mut self, col: Col) {
         let x_start: f32 = 0.0;
         let x_end: f32 = 0.8;
 
@@ -184,30 +170,14 @@ impl TermDraw {
             }
             x += x_step;
         }
-
-        // for x in (x_start..=x_end).step_by(x_step) {
-        //     self.pixel_set(x, 5, col);
-        // }
     }
 }
 
 fn main() {
     let mut canv = TermDraw::new();
 
-    // canv.line0();
-    // canv.draw();
-    // canv.clear();
-    // canv.line1();
-    // canv.draw();
-    // canv.clear();
-
-    // canv.line0();
-    // canv.line1();
-    // canv.draw();
-    // canv.clear();
-
-    canv.line2((0, 0, 255));
-    canv.line2((255, 0, 0));
-    canv.line2((0, 255, 0));
+    canv.line((0, 0, 255));
+    canv.line((255, 0, 0));
+    canv.line((0, 255, 0));
     canv.draw();
 }
