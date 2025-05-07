@@ -10,13 +10,34 @@ pub type Col = (u8, u8, u8);
 
 pub struct TermDraw {
     stdout: std::io::Stdout,
+    width: u32,
+    height: u32,
 }
 
 impl TermDraw {
-    pub fn new() -> Self {
+    fn uninitialized() -> Self {
         TermDraw {
             stdout: std::io::stdout(),
+            width: 0,
+            height: 0,
         }
+    }
+
+    pub fn new() -> Self {
+        let mut data = TermDraw::uninitialized();
+        data.recallibrate();
+        data
+    }
+
+    pub fn recallibrate(&mut self) {
+        let (cols, rows) = crossterm::terminal::size().unwrap();
+        self.width = cols.into();
+        let rows: u32 = rows.into();
+        self.height = rows * 2;
+    }
+
+    fn dbg(&self) {
+        println!("width={} height={}", self.width, self.height);
     }
 
     pub fn print_pixel(&mut self, color_top: Col, color_bot: Col) {
@@ -52,6 +73,5 @@ fn main() {
 
     println!();
 
-    let (cols, rows) = crossterm::terminal::size().unwrap();
-    println!("cols={cols} rows={rows}");
+    drawer.dbg();
 }
