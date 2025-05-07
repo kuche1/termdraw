@@ -173,13 +173,15 @@ impl TermDraw {
         let mut x: f32 = x_start;
 
         for y in (y_start as usize)..=(y_end as usize) {
-            println!("x={x} y={y}");
+            let x_target = (x + x_step) as usize;
+            let mut x_tmp = x as usize;
 
-            // let y_usize = y as usize;
-
-            self.pixel_set(x as usize, y, col);
-
-            // y += y_step;
+            while x_tmp < x_target {
+                // TODO3 I really have to think if this is going to cause empty pixels (I can't think RN cuz it's too late)
+                self.pixel_set(x_tmp, y, col);
+                println!("x={x_tmp} y={y}");
+                x_tmp += 1;
+            }
             x += x_step;
         }
 
