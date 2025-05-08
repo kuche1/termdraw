@@ -182,11 +182,6 @@ impl TermDraw {
 fn main() {
     let mut canv = TermDraw::new();
 
-    // canv.line(0.2, 0.8, 0.2, 0.4, (255, 0, 0));
-    // canv.line(0.4, 0.8, 0.2, 0.4, (0, 255, 0));
-    // canv.line(0.0, 1.0, 0.0, 1.0, (0, 0, 255));
-    // canv.draw();
-
     canv.dot((0.5, 0.5), (255, 0, 0));
     canv.dot((0.0, 0.5), (255, 0, 0));
     canv.dot((1.0, 0.5), (255, 0, 0));
