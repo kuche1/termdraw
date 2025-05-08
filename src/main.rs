@@ -131,17 +131,25 @@ impl TermDraw {
     }
 
     fn line_basic_x(&mut self, x_start: usize, x_end: usize, y: usize, col: Col) {
+        let (x_start, x_end) = {
+            if x_start <= x_end {
+                (x_start, x_end)
+            } else {
+                (x_end, x_start)
+            }
+        };
+
         for x in x_start..=x_end {
             println!("x={x} y={y}");
             self.pixel_set(x, y, col);
         }
     }
 
-    fn line_basic_y(&mut self, x: usize, y_start: usize, y_end: usize, col: Col) {
-        for y in y_start..=y_end {
-            self.pixel_set(x, y, col);
-        }
-    }
+    // fn line_basic_y(&mut self, x: usize, y_start: usize, y_end: usize, col: Col) {
+    //     for y in y_start..=y_end {
+    //         self.pixel_set(x, y, col);
+    //     }
+    // }
 
     pub fn line(&mut self, col: Col) {
         let x_start: f32 = 0.0;
