@@ -160,15 +160,21 @@ impl TermDraw {
         dbg!(x_len);
         dbg!(y_len);
 
-        if x_len < y_len {
-            // TODO this causes pixel overlaps
+        if x_len <= y_len {
+            // I hope this also works for when `x_len == y_len`
             for y_ofs in 0..=(end_y - start_y) {
+                // TODO this assumes that `end_y >= start_y`
                 let x = start_x + x_len * y_ofs / (end_y - start_y);
                 let y = start_y + y_ofs;
                 self.pixel_set((x, y), col);
             }
         } else {
-            todo!();
+            for x_ofs in 0..=(end_x - start_x) {
+                // TODO this assumes that `end_x >= start_x`
+                let x = start_x + x_ofs;
+                let y = start_y + y_len * x_ofs / (end_x - start_x);
+                self.pixel_set((x, y), col);
+            }
         }
     }
 }
@@ -191,6 +197,7 @@ fn main() {
     println!();
 
     canv.clear();
-    canv.line_tl_br((0.2, 0.2), (0.4, 0.8), (255, 0, 0));
+    canv.line_tl_br((0.28, 0.1), (0.32, 0.9), (255, 0, 0));
+    canv.line_tl_br((0.1, 0.1), (0.6, 0.4), (0, 255, 0));
     canv.draw();
 }
