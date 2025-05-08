@@ -38,7 +38,8 @@ impl TermDraw {
     pub fn recallibrate(&mut self) {
         let (cols, rows) = crossterm::terminal::size().unwrap();
         self.width = cols.into();
-        let rows: u32 = rows.into(); // TODO? subtract 1 so that there is space for the new line ?
+        let rows: u32 = rows.into();
+        let rows = rows.checked_add_signed(-1).unwrap(); // leave 1 like free for the new line
         self.height = rows * 2;
 
         // TODO1 crash if width or height is 0 (easier array access)
