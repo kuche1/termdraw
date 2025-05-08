@@ -135,8 +135,8 @@ impl TermDraw {
     }
 
     fn scale(&self, pos: Pos) -> PosRaw {
-        let x_max: f32 = (self.buf[0].len() - 1) as f32;
-        let y_max: f32 = (self.buf.len() - 1) as f32;
+        let x_max: f32 = (self.width - 1) as f32;
+        let y_max: f32 = (self.height - 1) as f32;
 
         let x = x_max * pos.0;
         let y = y_max * pos.1;
