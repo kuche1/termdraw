@@ -157,7 +157,7 @@ impl TermDraw {
         let x_len = start_x.abs_diff(end_x);
         let y_len = start_y.abs_diff(end_y);
 
-        // this vvv sucks major balls
+        // this vvv sucks major balls, either use generators with ssize or do something about _len
 
         if (start_x <= end_x) && (start_y <= end_y) {
             if x_len <= y_len {
