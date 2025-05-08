@@ -157,24 +157,23 @@ impl TermDraw {
         let x_len = start_x.abs_diff(end_x);
         let y_len = start_y.abs_diff(end_y);
 
-        dbg!(x_len);
-        dbg!(y_len);
-
-        if x_len <= y_len {
-            // I hope this also works for when `x_len == y_len`
-            for y_ofs in 0..=(end_y - start_y) {
-                // TODO this assumes that `end_y >= start_y`
-                let x = start_x + x_len * y_ofs / (end_y - start_y);
-                let y = start_y + y_ofs;
-                self.pixel_set((x, y), col);
+        if (start_x <= end_x) && (start_y <= end_y) {
+            if x_len <= y_len {
+                // I hope this also works for when `x_len == y_len`
+                for y_ofs in 0..=(end_y - start_y) {
+                    let x = start_x + x_len * y_ofs / (end_y - start_y);
+                    let y = start_y + y_ofs;
+                    self.pixel_set((x, y), col);
+                }
+            } else {
+                for x_ofs in 0..=(end_x - start_x) {
+                    let x = start_x + x_ofs;
+                    let y = start_y + y_len * x_ofs / (end_x - start_x);
+                    self.pixel_set((x, y), col);
+                }
             }
         } else {
-            for x_ofs in 0..=(end_x - start_x) {
-                // TODO this assumes that `end_x >= start_x`
-                let x = start_x + x_ofs;
-                let y = start_y + y_len * x_ofs / (end_x - start_x);
-                self.pixel_set((x, y), col);
-            }
+            todo!();
         }
     }
 }
