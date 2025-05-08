@@ -150,25 +150,48 @@ impl TermDraw {
         self.pixel_set(self.scale(pos), col);
     }
 
-    pub fn line_tl_br(&mut self, start: Pos, end: Pos, col: Col) {
+    pub fn line(&mut self, start: Pos, end: Pos, col: Col) {
         let (start_x, start_y) = self.scale(start);
         let (end_x, end_y) = self.scale(end);
 
         let x_len = start_x.abs_diff(end_x);
         let y_len = start_y.abs_diff(end_y);
 
+        // this vvv sucks major balls
+
         if (start_x <= end_x) && (start_y <= end_y) {
             if x_len <= y_len {
                 // I hope this also works for when `x_len == y_len`
-                for y_ofs in 0..=(end_y - start_y) {
-                    let x = start_x + x_len * y_ofs / (end_y - start_y);
+                let loop_end = end_y - start_y;
+                for y_ofs in 0..=loop_end {
+                    let x = start_x + x_len * y_ofs / loop_end;
                     let y = start_y + y_ofs;
                     self.pixel_set((x, y), col);
                 }
             } else {
-                for x_ofs in 0..=(end_x - start_x) {
+                let loop_end = end_x - start_x;
+                for x_ofs in 0..=loop_end {
                     let x = start_x + x_ofs;
-                    let y = start_y + y_len * x_ofs / (end_x - start_x);
+                    let y = start_y + y_len * x_ofs / loop_end;
+                    self.pixel_set((x, y), col);
+                }
+            }
+        } else if (start_x <= end_x) && (start_y > end_y) {
+            if x_len <= y_len {
+                println!("~~~~~~~~~~~~~ YEEEE 1");
+                // I hope this also works for when `x_len == y_len`
+                let loop_end = start_y - end_y;
+                for y_ofs in 0..=loop_end {
+                    let x = end_x - x_len * y_ofs / loop_end;
+                    let y = end_y + y_ofs;
+                    self.pixel_set((x, y), col);
+                }
+            } else {
+                println!("~~~~~~~~~~~~~ YEEEE 2");
+                let loop_end = end_x - start_x;
+                for x_ofs in 0..=loop_end {
+                    let x = start_x + x_ofs;
+                    let y = start_y + y_len * x_ofs / loop_end;
                     self.pixel_set((x, y), col);
                 }
             }
@@ -191,7 +214,8 @@ fn main() {
     println!();
 
     canv.clear();
-    canv.line_tl_br((0.28, 0.1), (0.32, 0.9), (255, 0, 0));
-    canv.line_tl_br((0.1, 0.1), (0.6, 0.4), (0, 255, 0));
+    canv.line((0.28, 0.1), (0.32, 0.9), (255, 0, 0));
+    canv.line((0.1, 0.1), (0.6, 0.4), (0, 255, 0));
+    canv.line((0.1, 0.7), (0.2, 0.4), (0, 0, 255)); // dbg: 1
     canv.draw();
 }
