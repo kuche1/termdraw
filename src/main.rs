@@ -148,55 +148,25 @@ impl TermDraw {
         self.pixel_set(self.scale(pos), col);
     }
 
-    // fn line_basic_x(&mut self, x_start: usize, x_end: usize, y: usize, col: Col) {
-    //     let (x_start, x_end) = {
-    //         if x_start <= x_end {
-    //             (x_start, x_end)
-    //         } else {
-    //             (x_end, x_start)
-    //         }
-    //     };
+    pub fn line_tl_br(&mut self, start: Pos, end: Pos, col: Col) {
+        let (start_x, start_y) = self.scale(start);
+        let (end_x, end_y) = self.scale(end);
 
-    //     for x in x_start..=x_end {
-    //         println!("x={x} y={y}");
-    //         self.pixel_set(x, y, col);
-    //     }
-    // }
+        let x_len = start_x.abs_diff(end_x);
+        let y_len = start_y.abs_diff(end_y);
 
-    // // fn line_basic_y(&mut self, x: usize, y_start: usize, y_end: usize, col: Col) {
-    // //     for y in y_start..=y_end {
-    // //         self.pixel_set(x, y, col);
-    // //     }
-    // // }
+        dbg!(x_len);
+        dbg!(y_len);
 
-    // pub fn line(&mut self, x_start: f32, x_end: f32, y_start: f32, y_end: f32, col: Col) {
-    //     let x_max: f32 = (self.buf[0].len() - 1) as f32;
-    //     let y_max: f32 = (self.buf.len() - 1) as f32;
-
-    //     let x_start = x_start * x_max;
-    //     let y_start = y_start * y_max;
-
-    //     let x_end = x_end * x_max;
-    //     let y_end = y_end * y_max;
-
-    //     if (x_start <= x_end) && (y_start <= y_end) {
-    //         let x_len = x_end - x_start;
-    //         let y_len = y_end - y_start;
-
-    //         let x_step = x_len / y_len;
-
-    //         let mut x: f32 = x_start;
-
-    //         for y in (y_start as usize)..=(y_end as usize) {
-    //             // not 100% sure if this is correct, but it does seem to work
-    //             let end = x + x_step;
-    //             self.line_basic_x(x as usize, end as usize - 1, y, col);
-    //             x = end;
-    //         }
-    //     } else {
-    //         todo!();
-    //     }
-    // }
+        if x_len < y_len {
+            // TODO this just draws a straight line
+            for y in start_y..=end_y {
+                self.pixel_set((start_x, y), col);
+            }
+        } else {
+            todo!();
+        }
+    }
 }
 
 fn main() {
@@ -212,5 +182,11 @@ fn main() {
     canv.dot((1.0, 0.5), (255, 0, 0));
     canv.dot((0.0, 0.0), (255, 0, 0));
     canv.dot((1.0, 1.0), (255, 0, 0));
+    canv.draw();
+
+    println!();
+
+    canv.clear();
+    canv.line_tl_br((0.2, 0.2), (0.4, 0.8), (255, 0, 0));
     canv.draw();
 }
