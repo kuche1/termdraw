@@ -181,7 +181,7 @@ impl TermDraw {
                 // I hope this also works for when `x_len == y_len`
                 let loop_end = start_y - end_y;
                 for y_ofs in 0..=loop_end {
-                    let x = end_x - x_len * y_ofs / loop_end;
+                    let x = end_x - x_len * y_ofs / loop_end; // TODO I want + here
                     let y = end_y + y_ofs;
                     self.pixel_set((x, y), col);
                 }
@@ -189,22 +189,20 @@ impl TermDraw {
                 let loop_end = end_x - start_x;
                 for x_ofs in 0..=loop_end {
                     let x = start_x + x_ofs;
-                    let y = start_y - y_len * x_ofs / loop_end;
+                    let y = start_y - y_len * x_ofs / loop_end; // TODO I want + here
                     self.pixel_set((x, y), col);
                 }
             }
         } else if (start_x > end_x) && (start_y <= end_y) {
             if x_len <= y_len {
                 // I hope this also works for when `x_len == y_len`
-                println!("~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 1");
                 let loop_end = end_y - start_y;
                 for y_ofs in 0..=loop_end {
-                    let x = start_x - x_len * y_ofs / loop_end;
+                    let x = start_x - x_len * y_ofs / loop_end; // TODO I want + here
                     let y = start_y + y_ofs;
                     self.pixel_set((x, y), col);
                 }
             } else {
-                println!("~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 2");
                 let loop_end = start_x - end_x;
                 for x_ofs in 0..=loop_end {
                     let x = start_x - x_ofs;
@@ -212,8 +210,26 @@ impl TermDraw {
                     self.pixel_set((x, y), col);
                 }
             }
+        } else if (start_x > end_x) && (start_y > end_y) {
+            if x_len <= y_len {
+                // I hope this also works for when `x_len == y_len`
+                let loop_end = start_y - end_y;
+                for y_ofs in 0..=loop_end {
+                    let x = start_x - x_len * y_ofs / loop_end;
+                    let y = start_y - y_ofs;
+                    self.pixel_set((x, y), col);
+                }
+            } else {
+                let loop_end = start_x - end_x;
+                for x_ofs in 0..=loop_end {
+                    let x = start_x - x_ofs;
+                    let y = start_y - y_len * x_ofs / loop_end;
+                    self.pixel_set((x, y), col);
+                }
+            }
         } else {
-            todo!();
+            //
+            unreachable!();
         }
     }
 }
@@ -235,7 +251,9 @@ fn main() {
     canv.line((0.1, 0.1), (0.6, 0.4), (0, 255, 0));
     canv.line((0.1, 0.7), (0.2, 0.4), (0, 0, 255));
     canv.line((0.2, 0.7), (0.6, 0.4), (255, 255, 0));
-    canv.line((0.9, 0.4), (0.8, 0.75), (255, 0, 255)); // 1
-    canv.line((0.9, 0.4), (0.45, 0.75), (0, 255, 255)); // 2
+    canv.line((0.9, 0.4), (0.8, 0.75), (255, 0, 255));
+    canv.line((0.9, 0.4), (0.45, 0.75), (0, 255, 255));
+    canv.line((0.85, 0.65), (0.75, 0.28), (125, 0, 0));
+    canv.line((0.85, 0.65), (0.45, 0.28), (0, 125, 0));
     canv.draw();
 }
