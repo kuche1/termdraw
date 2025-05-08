@@ -177,8 +177,6 @@ impl TermDraw {
         let x_step = x_len / y_len;
         dbg!(x_step);
 
-        // TODO this vvv sucks because we miss some spots
-
         let mut x: f32 = x_start;
 
         for y in (y_start as usize)..=(y_end as usize) {
