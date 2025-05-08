@@ -191,7 +191,7 @@ impl TermDraw {
                 let loop_end = end_x - start_x;
                 for x_ofs in 0..=loop_end {
                     let x = start_x + x_ofs;
-                    let y = start_y + y_len * x_ofs / loop_end;
+                    let y = start_y - y_len * x_ofs / loop_end;
                     self.pixel_set((x, y), col);
                 }
             }
@@ -217,5 +217,6 @@ fn main() {
     canv.line((0.28, 0.1), (0.32, 0.9), (255, 0, 0));
     canv.line((0.1, 0.1), (0.6, 0.4), (0, 255, 0));
     canv.line((0.1, 0.7), (0.2, 0.4), (0, 0, 255)); // dbg: 1
+    canv.line((0.2, 0.7), (0.6, 0.4), (255, 255, 0)); // dbg: 2
     canv.draw();
 }
