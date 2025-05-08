@@ -9,6 +9,8 @@ const PIXEL: &str = "▀";
 pub type Col = (u8, u8, u8);
 type Density = u8;
 type Pixel = (Col, Density);
+type Pos = (f32, f32);
+type PosRaw = (usize, usize);
 
 pub struct TermDraw {
     stdout: std::io::Stdout,
@@ -99,10 +101,12 @@ impl TermDraw {
         }
     }
 
-    fn pixel_set(&mut self, x: usize, y: usize, col: Col) {
+    fn pixel_set(&mut self, pos: PosRaw, col: Col) {
         // there are 2 way to do this
         // 1 - calculate color on each pixel set (current)
         // 2 - accumilate r,g,b and calculate color on draw
+
+        let (x, y) = pos;
 
         let (cr, cg, cb) = col;
         let cr: u16 = cr.into();
@@ -130,62 +134,79 @@ impl TermDraw {
         self.buf[y][x] = ((nr, ng, nb), new_dens);
     }
 
-    fn line_basic_x(&mut self, x_start: usize, x_end: usize, y: usize, col: Col) {
-        let (x_start, x_end) = {
-            if x_start <= x_end {
-                (x_start, x_end)
-            } else {
-                (x_end, x_start)
-            }
-        };
+    fn scale(&self, pos: Pos) -> PosRaw {
+        let x_max: f32 = (self.buf[0].len() - 1) as f32;
+        let y_max: f32 = (self.buf.len() - 1) as f32;
 
-        for x in x_start..=x_end {
-            println!("x={x} y={y}");
-            self.pixel_set(x, y, col);
-        }
+        let x = x_max * pos.0;
+        let y = y_max * pos.1;
+
+        (x as usize, y as usize)
     }
 
-    // fn line_basic_y(&mut self, x: usize, y_start: usize, y_end: usize, col: Col) {
-    //     for y in y_start..=y_end {
+    pub fn dot(&mut self, pos: Pos, col: Col) {
+        self.pixel_set(self.scale(pos), col);
+    }
+
+    // fn line_basic_x(&mut self, x_start: usize, x_end: usize, y: usize, col: Col) {
+    //     let (x_start, x_end) = {
+    //         if x_start <= x_end {
+    //             (x_start, x_end)
+    //         } else {
+    //             (x_end, x_start)
+    //         }
+    //     };
+
+    //     for x in x_start..=x_end {
+    //         println!("x={x} y={y}");
     //         self.pixel_set(x, y, col);
     //     }
     // }
 
-    pub fn line(&mut self, x_start: f32, x_end: f32, y_start: f32, y_end: f32, col: Col) {
-        let x_max: f32 = (self.buf[0].len() - 1) as f32;
-        let y_max: f32 = (self.buf.len() - 1) as f32;
+    // // fn line_basic_y(&mut self, x: usize, y_start: usize, y_end: usize, col: Col) {
+    // //     for y in y_start..=y_end {
+    // //         self.pixel_set(x, y, col);
+    // //     }
+    // // }
 
-        let x_start = x_start * x_max;
-        let y_start = y_start * y_max;
+    // pub fn line(&mut self, x_start: f32, x_end: f32, y_start: f32, y_end: f32, col: Col) {
+    //     let x_max: f32 = (self.buf[0].len() - 1) as f32;
+    //     let y_max: f32 = (self.buf.len() - 1) as f32;
 
-        let x_end = x_end * x_max;
-        let y_end = y_end * y_max;
+    //     let x_start = x_start * x_max;
+    //     let y_start = y_start * y_max;
 
-        if (x_start <= x_end) && (y_start <= y_end) {
-            let x_len = x_end - x_start;
-            let y_len = y_end - y_start;
+    //     let x_end = x_end * x_max;
+    //     let y_end = y_end * y_max;
 
-            let x_step = x_len / y_len;
+    //     if (x_start <= x_end) && (y_start <= y_end) {
+    //         let x_len = x_end - x_start;
+    //         let y_len = y_end - y_start;
 
-            let mut x: f32 = x_start;
+    //         let x_step = x_len / y_len;
 
-            for y in (y_start as usize)..=(y_end as usize) {
-                // not 100% sure if this is correct, but it does seem to work
-                let end = x + x_step;
-                self.line_basic_x(x as usize, end as usize - 1, y, col);
-                x = end;
-            }
-        } else {
-            todo!();
-        }
-    }
+    //         let mut x: f32 = x_start;
+
+    //         for y in (y_start as usize)..=(y_end as usize) {
+    //             // not 100% sure if this is correct, but it does seem to work
+    //             let end = x + x_step;
+    //             self.line_basic_x(x as usize, end as usize - 1, y, col);
+    //             x = end;
+    //         }
+    //     } else {
+    //         todo!();
+    //     }
+    // }
 }
 
 fn main() {
     let mut canv = TermDraw::new();
 
-    canv.line(0.2, 0.8, 0.2, 0.4, (0, 0, 255));
-    // canv.line((255, 0, 0));
-    // canv.line((0, 255, 0));
+    // canv.line(0.2, 0.8, 0.2, 0.4, (255, 0, 0));
+    // canv.line(0.4, 0.8, 0.2, 0.4, (0, 255, 0));
+    // canv.line(0.0, 1.0, 0.0, 1.0, (0, 0, 255));
+    // canv.draw();
+
+    canv.dot((0.5, 0.5), (255, 0, 0));
     canv.draw();
 }
