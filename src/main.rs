@@ -181,7 +181,7 @@ impl TermDraw {
                 // I hope this also works for when `x_len == y_len`
                 let loop_end = start_y - end_y;
                 for y_ofs in 0..=loop_end {
-                    let x = end_x - x_len * y_ofs / loop_end; // TODO I feel bad about this
+                    let x = end_x - x_len * y_ofs / loop_end;
                     let y = end_y + y_ofs;
                     self.pixel_set((x, y), col);
                 }
@@ -189,7 +189,7 @@ impl TermDraw {
                 let loop_end = end_x - start_x;
                 for x_ofs in 0..=loop_end {
                     let x = start_x + x_ofs;
-                    let y = start_y - y_len * x_ofs / loop_end; // TODO I feel bad about this
+                    let y = start_y - y_len * x_ofs / loop_end;
                     self.pixel_set((x, y), col);
                 }
             }
@@ -199,7 +199,7 @@ impl TermDraw {
                 println!("~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 1");
                 let loop_end = end_y - start_y;
                 for y_ofs in 0..=loop_end {
-                    let x = start_x - x_len * y_ofs / loop_end; // TODO I feel bad about this
+                    let x = start_x - x_len * y_ofs / loop_end;
                     let y = start_y + y_ofs;
                     self.pixel_set((x, y), col);
                 }
