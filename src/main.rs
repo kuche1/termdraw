@@ -151,13 +151,7 @@ impl TermDraw {
     //     }
     // }
 
-    pub fn line(&mut self, col: Col) {
-        let x_start: f32 = 0.0;
-        let x_end: f32 = 0.8;
-
-        let y_start: f32 = 0.0;
-        let y_end: f32 = 1.0;
-
+    pub fn line(&mut self, x_start: f32, x_end: f32, y_start: f32, y_end: f32, col: Col) {
         let x_max: f32 = (self.buf[0].len() - 1) as f32;
         let y_max: f32 = (self.buf.len() - 1) as f32;
 
@@ -167,23 +161,22 @@ impl TermDraw {
         let x_end = x_end * x_max;
         let y_end = y_end * y_max;
 
-        let x_len = x_end - x_start; // TODO1 assuming x_end is greater
-        let y_len = y_end - y_start; // TODO1 assuming x_end is greater
+        if (x_start <= x_end) && (y_start <= y_end) {
+            let x_len = x_end - x_start;
+            let y_len = y_end - y_start;
 
-        dbg!(x_len);
-        dbg!(y_len);
-        assert!(y_len < x_len);
+            let x_step = x_len / y_len;
 
-        let x_step = x_len / y_len;
-        dbg!(x_step);
+            let mut x: f32 = x_start;
 
-        let mut x: f32 = x_start;
-
-        for y in (y_start as usize)..=(y_end as usize) {
-            // not 100% sure if this is correct, but it does seem like it
-            let end = x + x_step;
-            self.line_basic_x(x as usize, end as usize - 1, y, col);
-            x = end;
+            for y in (y_start as usize)..=(y_end as usize) {
+                // not 100% sure if this is correct, but it does seem to work
+                let end = x + x_step;
+                self.line_basic_x(x as usize, end as usize - 1, y, col);
+                x = end;
+            }
+        } else {
+            todo!();
         }
     }
 }
@@ -191,8 +184,8 @@ impl TermDraw {
 fn main() {
     let mut canv = TermDraw::new();
 
-    canv.line((0, 0, 255));
-    canv.line((255, 0, 0));
-    canv.line((0, 255, 0));
+    canv.line(0.2, 0.8, 0.2, 0.4, (0, 0, 255));
+    // canv.line((255, 0, 0));
+    // canv.line((0, 255, 0));
     canv.draw();
 }
