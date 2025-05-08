@@ -42,7 +42,9 @@ impl TermDraw {
         let rows = rows.checked_add_signed(-1).unwrap(); // leave 1 like free for the new line
         self.height = rows * 2;
 
-        // TODO1 crash if width or height is 0 (easier array access)
+        if (self.width <= 0) || (self.height <= 0) {
+            panic!("invalid width or height");
+        }
 
         self.buf.clear();
 
