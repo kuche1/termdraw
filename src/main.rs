@@ -131,6 +131,8 @@ impl TermDraw {
         let nb: u8 = nb.try_into().unwrap();
         let new_dens: u8 = new_dens.try_into().unwrap();
 
+        println!("dbg: x={x} y={y}");
+
         self.buf[y][x] = ((nr, ng, nb), new_dens);
     }
 
@@ -159,9 +161,11 @@ impl TermDraw {
         dbg!(y_len);
 
         if x_len < y_len {
-            // TODO this just draws a straight line
-            for y in start_y..=end_y {
-                self.pixel_set((start_x, y), col);
+            // TODO this causes pixel overlaps
+            for y_ofs in 0..=(end_y - start_y) {
+                let x = start_x + x_len * y_ofs / (end_y - start_y);
+                let y = start_y + y_ofs;
+                self.pixel_set((x, y), col);
             }
         } else {
             todo!();
