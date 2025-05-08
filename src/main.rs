@@ -180,8 +180,7 @@ impl TermDraw {
         let mut x: f32 = x_start;
 
         for y in (y_start as usize)..=(y_end as usize) {
-            // TODO3 I really have to think about this (I can't think RN cuz it's too late)
-            // TODO3 this might actually be a blessing in disguide, fix the basic drawer to accept any arguments and think if we can ommit the the len check
+            // not 100% sure if this is correct, but it does seem like it
             let end = x + x_step;
             self.line_basic_x(x as usize, end as usize - 1, y, col);
             x = end;
